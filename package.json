@@ -1,0 +1,38 @@
+{
+  "name": "1-bgs-ai-writing-optimize",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node ./node_modules/next/dist/bin/next dev",
+    "build": "node ./node_modules/next/dist/bin/next build",
+    "start": "node ./node_modules/next/dist/bin/next start",
+    "lint": "node ./node_modules/next/dist/bin/next lint",
+    "typecheck": "node ./node_modules/typescript/bin/tsc --noEmit -p tsconfig.typecheck.json",
+    "db:push": "node ./node_modules/prisma/build/index.js db push",
+    "db:seed": "node ./node_modules/tsx/dist/cli.mjs prisma/seed.ts",
+    "db:init": "npm run db:push && npm run db:seed",
+    "verify": "node scripts/verify.mjs"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.6.1",
+    "@ant-design/nextjs-registry": "^1.0.2",
+    "@ant-design/x": "^1.6.1",
+    "@prisma/client": "^5.22.0",
+    "antd": "^5.27.0",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "next": "^14.2.26",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.26",
+    "prisma": "^5.22.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

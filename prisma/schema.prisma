@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id          String   @id @default(cuid())
+  username    String   @unique
+  password    String
+  name        String
+  department  String
+  role        String
+  status      String
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  module     String
+  action     String
+  objectType String
+  objectId   String?
+  operator   String
+  result     String
+  summary    String
+  createdAt  DateTime @default(now())
+}
+
+model SystemSetting {
+  id          String   @id @default(cuid())
+  groupName   String
+  key         String   @unique
+  value       String
+  type        String
+  enabled     Boolean  @default(true)
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WritingTemplate {
+  id          String            @id @default(cuid())
+  code        String            @unique
+  name        String
+  type        String
+  description String
+  prompt      String
+  seedSample  String
+  order       Int
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  documents   WritingDocument[]
+}
+
+model WritingDocument {
+  id          String            @id @default(cuid())
+  title       String
+  type        String
+  status      String
+  tone        String
+  keywords    String
+  summary     String
+  outline     String
+  content     String
+  source      String
+  templateId  String?
+  template    WritingTemplate?  @relation(fields: [templateId], references: [id])
+  messages    ConversationMessage[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model ProofreadTask {
+  id              String           @id @default(cuid())
+  title           String
+  sourceType      String
+  status          String
+  riskLevel       String
+  originalContent String
+  reviewedContent String
+  summary         String
+  source          String
+  issues          ProofreadIssue[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model ProofreadIssue {
+  id            String        @id @default(cuid())
+  taskId        String
+  task          ProofreadTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  issueType     String
+  severity      String
+  originalText  String
+  suggestion    String
+  reason        String
+  positionStart Int
+  positionEnd   Int
+  fixed         Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+}
+
+model ConversationMessage {
+  id          String           @id @default(cuid())
+  documentId  String
+  document    WritingDocument  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  role        String
+  stage       String
+  content     String
+  createdAt   DateTime         @default(now())
+}
