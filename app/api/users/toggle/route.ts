@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 
+import { requireApiAdminUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { writeAuditLog } from '@/lib/services';
 
 export async function POST(request: Request) {
+  const auth = await requireApiAdminUser();
+
+  if (auth.response) {
+    return auth.response;
+  }
+
   const payload = await request.json();
   const user = await prisma.user.findUnique({ where: { id: payload.id } });
 
@@ -12,6 +19,11 @@ export async function POST(request: Request) {
   }
 
   const nextStatus = user.status === '启用' ? '停用' : '启用';
+
+  if (user.id === auth.user.id && nextStatus === '停用') {
+    return NextResponse.json({ message: '不能停用当前登录账号。' }, { status: 400 });
+  }
+
   await prisma.user.update({
     where: { id: user.id },
     data: { status: nextStatus }

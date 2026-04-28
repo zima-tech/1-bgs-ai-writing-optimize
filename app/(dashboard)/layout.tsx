@@ -1,3 +1,4 @@
+import { requireCurrentUser } from '@/lib/auth';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 
 const titleMap: Record<string, { title: string; description: string }> = {
@@ -23,10 +24,24 @@ const titleMap: Record<string, { title: string; description: string }> = {
   }
 };
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
-  return <DashboardShell title="业务台" description="办公智能业务系统">{children}</DashboardShell>;
+  const user = await requireCurrentUser();
+
+  return (
+    <DashboardShell
+      title="业务台"
+      description="办公智能业务系统"
+      currentUser={{
+        username: user.username,
+        name: user.name,
+        role: user.role
+      }}
+    >
+      {children}
+    </DashboardShell>
+  );
 }

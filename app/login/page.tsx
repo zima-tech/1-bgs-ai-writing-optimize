@@ -1,9 +1,17 @@
 import { BulbOutlined, CheckCircleOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Space, Tag } from 'antd';
+import { redirect } from 'next/navigation';
 
 import { LoginForm } from '@/components/ui/login-form';
+import { getCurrentUser } from '@/lib/auth';
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const user = await getCurrentUser();
+
+  if (user) {
+    redirect('/writing');
+  }
+
   return (
     <div className="login-screen">
       <div className="login-card">

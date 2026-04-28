@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 
+import { requireApiAdminUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { writeAuditLog } from '@/lib/services';
 
 export async function POST(request: Request) {
+  const auth = await requireApiAdminUser();
+
+  if (auth.response) {
+    return auth.response;
+  }
+
   const payload = await request.json();
 
   await prisma.systemSetting.update({

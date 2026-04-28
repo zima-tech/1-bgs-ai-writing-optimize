@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-import { AUTH_COOKIE } from '@/lib/auth';
+import { AUTH_COOKIE } from '@/lib/auth-config';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -15,22 +15,22 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isAuthenticated = request.cookies.get(AUTH_COOKIE)?.value === 'admin';
+  const hasSessionCookie = Boolean(request.cookies.get(AUTH_COOKIE)?.value?.trim());
 
-  if (!isAuthenticated && isLoginPath) {
+  if (!hasSessionCookie && isLoginPath) {
     return NextResponse.next();
   }
 
-  if (!isAuthenticated && pathname.startsWith('/api')) {
+  if (!hasSessionCookie && pathname.startsWith('/api')) {
     return NextResponse.json({ message: '未登录，无法执行该操作。' }, { status: 401 });
   }
 
-  if (!isAuthenticated) {
+  if (!hasSessionCookie) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (isAuthenticated && isLoginPath) {
-    return NextResponse.redirect(new URL('/writing', request.url));
+  if (isLoginPath) {
+    return NextResponse.next();
   }
 
   return NextResponse.next();

@@ -38,7 +38,7 @@ export function LoginForm() {
           登录系统
         </Typography.Title>
         <Typography.Paragraph className="muted" style={{ marginBottom: 0 }}>
-          演示账号：`admin` / `admin123`
+          初始账号：`admin` / `admin123`
         </Typography.Paragraph>
       </div>
       {error ? <Alert type="error" message={error} style={{ marginBottom: 16 }} showIcon /> : null}

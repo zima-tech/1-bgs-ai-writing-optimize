@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
 
+import { requireApiUser } from '@/lib/auth';
 import { generateDraft } from '@/lib/ai';
 import { prisma } from '@/lib/prisma';
 import { writeAuditLog } from '@/lib/services';
 
 export async function POST(request: Request) {
+  const auth = await requireApiUser();
+
+  if (auth.response) {
+    return auth.response;
+  }
+
   const payload = await request.json();
   const template = payload.templateId
     ? await prisma.writingTemplate.findUnique({ where: { id: payload.templateId } })

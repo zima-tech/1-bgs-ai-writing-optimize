@@ -1,3 +1,4 @@
+import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export async function writeAuditLog(params: {
@@ -7,14 +8,17 @@ export async function writeAuditLog(params: {
   objectId?: string;
   summary: string;
   result?: string;
+  operator?: string;
 }) {
+  const currentUser = params.operator ? null : await getCurrentUser();
+
   await prisma.auditLog.create({
     data: {
       module: params.module,
       action: params.action,
       objectType: params.objectType,
       objectId: params.objectId,
-      operator: 'admin',
+      operator: params.operator || currentUser?.username || 'system',
       result: params.result || '成功',
       summary: params.summary
     }

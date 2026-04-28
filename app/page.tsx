@@ -1,9 +1,11 @@
 import { redirect } from 'next/navigation';
 
-import { getServerAuth } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
 
-export default function HomePage() {
-  if (getServerAuth()) {
+export default async function HomePage() {
+  const user = await getCurrentUser();
+
+  if (user) {
     redirect('/writing');
   }
 
