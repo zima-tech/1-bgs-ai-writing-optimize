@@ -1,7 +1,8 @@
 'use client';
 
 import type { SystemSetting } from '@prisma/client';
-import { App, Button, Card, Descriptions, Form, Input, Modal, Space, Switch, Tag } from 'antd';
+import { App, Button, Form, Input, Modal, Space, Switch, Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -12,6 +13,38 @@ export function SettingsManager({ settings }: { settings: SystemSetting[] }) {
   const [loading, setLoading] = useState(false);
   const [current, setCurrent] = useState<SystemSetting | null>(null);
   const [form] = Form.useForm();
+
+  const columns: ColumnsType<SystemSetting> = [
+    { title: '设置项', dataIndex: 'key', width: 240, fixed: 'left' },
+    { title: '分组', dataIndex: 'groupName', width: 160 },
+    { title: '当前值', dataIndex: 'value', width: 180, ellipsis: true },
+    { title: '类型', dataIndex: 'type', width: 100 },
+    {
+      title: '状态',
+      dataIndex: 'enabled',
+      width: 100,
+      render: (enabled: boolean) => <Tag color={enabled ? 'success' : 'default'}>{enabled ? '启用' : '停用'}</Tag>
+    },
+    { title: '说明', dataIndex: 'description', ellipsis: true },
+    {
+      title: '操作',
+      key: 'action',
+      width: 96,
+      fixed: 'right',
+      render: (_, setting) => (
+        <Button
+          size="small"
+          onClick={() => {
+            setCurrent(setting);
+            form.setFieldsValue(setting);
+            setOpen(true);
+          }}
+        >
+          编辑
+        </Button>
+      )
+    }
+  ];
 
   async function saveSetting(values: { value: string; description: string; enabled: boolean }) {
     if (!current) return;
@@ -39,35 +72,14 @@ export function SettingsManager({ settings }: { settings: SystemSetting[] }) {
   return (
     <App>
       <div className="page-stack">
-        {settings.map((setting) => (
-          <Card
-            key={setting.id}
-            className="panel-card"
-            title={setting.key}
-            extra={
-              <Button
-                size="small"
-                onClick={() => {
-                  setCurrent(setting);
-                  form.setFieldsValue(setting);
-                  setOpen(true);
-                }}
-              >
-                编辑
-              </Button>
-            }
-          >
-            <Descriptions column={1}>
-              <Descriptions.Item label="分组">{setting.groupName}</Descriptions.Item>
-              <Descriptions.Item label="当前值">{setting.value}</Descriptions.Item>
-              <Descriptions.Item label="类型">{setting.type}</Descriptions.Item>
-              <Descriptions.Item label="状态">
-                <Tag color={setting.enabled ? 'success' : 'default'}>{setting.enabled ? '启用' : '停用'}</Tag>
-              </Descriptions.Item>
-              <Descriptions.Item label="说明">{setting.description}</Descriptions.Item>
-            </Descriptions>
-          </Card>
-        ))}
+        <Table
+          className="panel-card"
+          rowKey="id"
+          columns={columns}
+          dataSource={settings}
+          pagination={{ pageSize: 8, showSizeChanger: false }}
+          scroll={{ x: 960, y: 'calc(100vh - 260px)' }}
+        />
         <Modal open={open} title="编辑系统设置" onCancel={() => setOpen(false)} footer={null} destroyOnClose>
           <Form form={form} layout="vertical" onFinish={saveSetting}>
             <Form.Item label="当前值" name="value" rules={[{ required: true, message: '请输入设置值' }]}>

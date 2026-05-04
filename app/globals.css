@@ -16,11 +16,26 @@
 
 html,
 body {
+  height: 100%;
   margin: 0;
   padding: 0;
   background: radial-gradient(circle at top right, #f6fbff 0%, var(--bg) 48%, #e6edf5 100%);
   color: var(--text);
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+body {
+  overflow: hidden;
+}
+
+body > .app-shell,
+body > div {
+  min-height: 0;
+}
+
+.ant-app {
+  height: 100%;
+  min-height: 0;
 }
 
 a {
@@ -29,22 +44,40 @@ a {
 }
 
 .app-shell {
-  min-height: 100vh;
+  height: 100%;
+  min-height: 0;
 }
 
-.dashboard-layout {
+.ant-layout.dashboard-layout {
   display: flex;
-  min-height: 100vh;
+  flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .dashboard-sidebar {
   width: 248px;
+  flex: 0 0 248px;
+  height: 100vh;
+  min-height: 0;
   background: linear-gradient(180deg, #0f274a 0%, #173962 100%);
   color: #fff;
   padding: 20px 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dashboard-sidebar .ant-menu {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .dashboard-brand {
@@ -55,26 +88,40 @@ a {
 .dashboard-content {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .dashboard-header {
-  height: 72px;
-  padding: 0 24px;
+  min-height: 72px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
   border-bottom: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(16px);
 }
 
+.dashboard-header > div:first-child {
+  min-width: 0;
+}
+
+.dashboard-header .ant-space {
+  flex-shrink: 0;
+}
+
 .dashboard-main {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px;
 }
 
@@ -193,12 +240,37 @@ a {
 }
 
 @media (max-width: 960px) {
-  .dashboard-layout {
+  body {
+    overflow: auto;
+  }
+
+  .ant-layout.dashboard-layout {
     flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
   }
 
   .dashboard-sidebar {
     width: 100%;
+    flex: 0 0 auto;
+    height: auto;
+    max-height: none;
+  }
+
+  .dashboard-content {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .dashboard-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-main {
+    overflow: visible;
   }
 
   .login-card {
