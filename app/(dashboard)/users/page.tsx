@@ -4,6 +4,6 @@ import { UsersManager } from '@/components/governance/users-manager';
 
 export default async function UsersPage() {
   await requireAdminUser();
-  const users = await prisma.user.findMany({ orderBy: { createdAt: 'asc' } });
+  const users = await prisma.user.findMany({ orderBy: { createdAt: 'asc' }, take: 100 });
   return <UsersManager users={users} />;
 }

@@ -29,10 +29,12 @@ export async function getDashboardSnapshot() {
   const [documents, proofreads, templates, logs] = await Promise.all([
     prisma.writingDocument.findMany({
       orderBy: { updatedAt: 'desc' },
+      take: 30,
       include: { template: true, messages: { orderBy: { createdAt: 'asc' } } }
     }),
     prisma.proofreadTask.findMany({
       orderBy: { updatedAt: 'desc' },
+      take: 20,
       include: { issues: true }
     }),
     prisma.writingTemplate.findMany({
@@ -41,7 +43,7 @@ export async function getDashboardSnapshot() {
     }),
     prisma.auditLog.findMany({
       orderBy: { createdAt: 'desc' },
-      take: 30
+      take: 12
     })
   ]);
 
