@@ -38,9 +38,10 @@ export function LoginForm() {
           登录系统
         </Typography.Title>
         <Typography.Paragraph className="muted" style={{ marginBottom: 0 }}>
-          初始账号：`admin` / `admin123`
+          使用授权账号进入业务工作台
         </Typography.Paragraph>
       </div>
+      <div className="login-account-hint">演示账号：admin / admin123</div>
       {error ? <Alert type="error" message={error} style={{ marginBottom: 16 }} showIcon /> : null}
       <Form layout="vertical" onFinish={onFinish} initialValues={{ username: 'admin', password: 'admin123' }}>
         <Form.Item label="用户名" name="username" rules={[{ required: true, message: '请输入用户名' }]}>

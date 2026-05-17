@@ -14,6 +14,8 @@
   --sidebar-top: #0b2240;
   --sidebar-bottom: #153d63;
   --shadow-soft: 0 14px 34px rgba(24, 43, 73, 0.08);
+  --login-trail-base-hue: 218;
+  --login-trail-hue-range: 32;
 }
 
 * {
@@ -265,6 +267,8 @@ a {
   display: grid;
   place-items: center;
   padding: 24px;
+  position: relative;
+  overflow: hidden;
   background:
     linear-gradient(120deg, rgba(255, 255, 255, 0.86), rgba(232, 238, 245, 0.58)),
     radial-gradient(circle at 18% 20%, rgba(25, 167, 206, 0.22), transparent 28%),
@@ -277,6 +281,60 @@ a {
   grid-template-columns: minmax(0, 1.1fr) 420px;
   gap: 18px;
   align-items: stretch;
+  position: relative;
+  z-index: 2;
+}
+
+.login-trail-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.login-trail-glow {
+  position: absolute;
+  left: var(--login-trail-x, 50%);
+  top: var(--login-trail-y, 50%);
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    hsla(var(--login-trail-hue, 214), 88%, 58%, 0.28),
+    hsla(var(--login-trail-hue, 214), 88%, 58%, 0.08) 38%,
+    transparent 68%
+  );
+  filter: blur(2px);
+  transform: translate(-50%, -50%);
+  transition:
+    left 120ms ease-out,
+    top 120ms ease-out,
+    background 180ms ease-out;
+}
+
+.login-trail-dot {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: hsla(var(--dot-hue), 88%, 58%, 0.35);
+  box-shadow: 0 0 22px hsla(var(--dot-hue), 88%, 58%, 0.28);
+  transform: translate(-50%, -50%) scale(var(--dot-scale));
+  animation: login-trail-fade 760ms ease-out forwards;
+}
+
+@keyframes login-trail-fade {
+  from {
+    opacity: 0.62;
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(10px);
+  }
 }
 
 .login-cover {

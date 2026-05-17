@@ -3,6 +3,7 @@ import { Space, Tag } from 'antd';
 import { redirect } from 'next/navigation';
 
 import { LoginForm } from '@/components/ui/login-form';
+import { LoginTrail } from '@/components/ui/login-trail';
 import { getCurrentUser } from '@/lib/auth';
 
 export default async function LoginPage() {
@@ -14,6 +15,7 @@ export default async function LoginPage() {
 
   return (
     <div className="login-screen">
+      <LoginTrail />
       <div className="login-card">
         <div className="login-cover">
           <div className="login-cover-topline">
