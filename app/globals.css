@@ -414,9 +414,10 @@ a {
 
 .login-capability {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) 20px;
+  grid-template-columns: 42px minmax(0, 1fr) 34px;
   gap: 14px;
   align-items: center;
+  min-height: 82px;
   padding: 14px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.12);
@@ -434,15 +435,32 @@ a {
   font-size: 19px;
 }
 
+.login-capability > div {
+  min-width: 0;
+}
+
+.login-capability > svg {
+  justify-self: center;
+  align-self: center;
+  box-sizing: content-box;
+  width: 22px;
+  height: 22px;
+  padding: 6px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.14);
+}
+
 .login-capability strong {
   display: block;
   color: #fff;
+  line-height: 1.25;
 }
 
 .login-capability p {
   margin: 4px 0 0;
   color: rgba(255, 255, 255, 0.72);
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 .login-cover-footer {
